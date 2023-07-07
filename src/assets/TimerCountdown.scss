@@ -1,0 +1,24 @@
+.timeContainer {
+    width: 100%;
+    margin: auto;
+    text-align: center;
+    font-size: 3em;
+}
+
+.timeContainerBlink {
+    width: 100%;
+    margin: auto;
+    text-align: center;
+    font-size: 3em;
+    @keyframes blink {
+        50% {
+            opacity: 0;
+        }
+        80% {
+            opacity: 0.5;
+        }
+    }
+    color: red;
+    transition: color 0.25s ease;
+    animation: blink 1s linear infinite;
+}
