@@ -14,7 +14,7 @@ function MainMenu({}: MainMenuProps) {
                     navigate('/daily')
                 }}
             >
-                Daily Challenge
+                Daily Blitz
             </div>
             <div className="menu-item">Mode #2</div>
             <div className="menu-item">Mode #3</div>
