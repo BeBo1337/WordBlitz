@@ -11,13 +11,20 @@ function MainMenu({}: MainMenuProps) {
             <div
                 className="menu-item"
                 onClick={() => {
-                    navigate('/daily')
+                    navigate('/daily/blitz')
                 }}
             >
                 Daily Blitz
             </div>
             <div className="menu-item">Mode #2</div>
-            <div className="menu-item">Mode #3</div>
+            <div
+                className="menu-item"
+                onClick={() => {
+                    navigate('/sprint')
+                }}
+            >
+                Word Sprint
+            </div>
             <div className="menu-item">Mode #4</div>
         </div>
     )

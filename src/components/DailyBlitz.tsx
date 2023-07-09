@@ -1,9 +1,10 @@
-import { useState, useEffect, FC } from 'react'
+import { useState, useEffect, useRef, FC } from 'react'
 import { Letter, allowedLetters } from '../models/Letter.type'
 import { Word } from '../models/Word.model'
 import { scrambleWord } from '../utils/GeneralFuncs'
 import { Logger } from 'sass'
 import TimerCountdown from './TimerCountdown'
+import { MediumPack } from '../models/WordPacks'
 
 interface BlitzProps {}
 
@@ -14,9 +15,10 @@ const DailyBlitz: FC<BlitzProps> = ({}: BlitzProps) => {
     const [word, setWord] = useState('')
     const [letterGroup, setLetterGroup] = useState<string[]>()
     const [validWords, setValidWords] = useState<Word[]>()
+    const inputRef = useRef<HTMLInputElement>(null)
 
     useEffect(() => {
-        scrambleWord('imagine')
+        console.log(MediumPack.pack.length)
         if (!letterGroup || !validWords) {
             const LG: string = getLGfromDB().toUpperCase()
             setValidWords(getVWfromDB())
@@ -30,6 +32,10 @@ const DailyBlitz: FC<BlitzProps> = ({}: BlitzProps) => {
     useEffect(() => {
         console.log(validWords)
     }, [score, letterGroup, validWords])
+
+    useEffect(() => {
+        if (inputRef.current) inputRef.current.value = ''
+    }, [score])
 
     const getLGfromDB = () => {
         // request the string from DB
@@ -110,6 +116,7 @@ const DailyBlitz: FC<BlitzProps> = ({}: BlitzProps) => {
             <TimerCountdown onTimeOver={onTimeOver} time={time} />
             <h1>{`{ ${letterGroup} }`}</h1>
             <input
+                ref={inputRef}
                 name="inputWord"
                 type="text"
                 placeholder="Enter words"
