@@ -5,6 +5,7 @@ import { scrambleWord } from '../utils/GeneralFuncs'
 import { Logger } from 'sass'
 import TimerCountdown from './TimerCountdown'
 import { MediumPack } from '../models/WordPacks'
+import { test } from '../models/EmojiTable'
 
 interface BlitzProps {}
 
@@ -18,7 +19,7 @@ const DailyBlitz: FC<BlitzProps> = ({}: BlitzProps) => {
     const inputRef = useRef<HTMLInputElement>(null)
 
     useEffect(() => {
-        console.log(MediumPack.pack.length)
+        console.log(test('when life gives you lemons you make lemonade'))
         if (!letterGroup || !validWords) {
             const LG: string = getLGfromDB().toUpperCase()
             setValidWords(getVWfromDB())

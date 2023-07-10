@@ -1,5 +1,9 @@
 import { WordPack } from '../models/WordPack.model'
-import { EasyPack, HardPack, MediumPack } from '../models/WordPacks'
+import data from '../models/WordPacks.json'
+
+interface WordsData {
+    [key: string]: string[]
+}
 
 export const getNumberInRange = (start: number, end: number): number => {
     return Math.floor(Math.random() * (end - start + 1)) + start
@@ -21,24 +25,14 @@ export function scrambleWord(word: string): string {
 }
 
 export function getNextWord(difficulty: number): string {
-    switch (difficulty) {
-        case 1:
-            return getWordFromPack(EasyPack)
+    const words: string[] = (data as WordsData)[difficulty.toString()]
 
-        case 2:
-            return getWordFromPack(MediumPack)
-
-        case 3:
-            return getWordFromPack(HardPack)
-
-        default:
-            return getWordFromPack(EasyPack)
+    if (!words || words.length === 0) {
+        // No more words available for the given difficulty level, must be a cheater
+        throw new Error('Cheater')
     }
-}
-
-export function getWordFromPack(wp: WordPack): string {
-    var n = getNumberInRange(0, wp.pack.length - 1)
-    var word = wp.pack[n]
-    wp.pack.splice(n, 1)
+    const randomIndex: number = getNumberInRange(0, words.length - 1)
+    const word: string = words[randomIndex]
+    words.splice(randomIndex, 1)
     return word.toUpperCase()
 }
