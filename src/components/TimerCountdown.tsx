@@ -4,18 +4,22 @@ import '../assets/TimerCountdown.scss'
 interface TimerCountdownProps {
     onTimeOver: Function
     time: number
+    calcWpm?: Function
 }
 
-function TimerCountdown({ onTimeOver, time }: TimerCountdownProps) {
+function TimerCountdown({ onTimeOver, time, calcWpm }: TimerCountdownProps) {
     const [timeLeft, setTime] = useState(time)
     const [warning, setWarning] = useState(false)
 
     useEffect(() => {
         setTimeout(() => {
             if (timeLeft === 0) onTimeOver()
-            else setTime(timeLeft - 1)
-            if (timeLeft <= 10) setWarning(true)
-            else setWarning(false)
+            else {
+                setTime(timeLeft - 1)
+                if (timeLeft <= 10) setWarning(true)
+                else setWarning(false)
+                if (calcWpm) calcWpm()
+            }
         }, 1000)
     }, [timeLeft])
 

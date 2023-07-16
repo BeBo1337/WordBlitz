@@ -1,10 +1,14 @@
 import { useState, useEffect, useRef, FC } from 'react'
 import { Letter, allowedLetters } from '../models/Letter.type'
 import { Word } from '../models/Word.model'
-import { scrambleWord } from '../utils/GeneralFuncs'
-import { Logger } from 'sass'
 import TimerCountdown from './TimerCountdown'
-import { MediumPack } from '../models/WordPacks'
+import {
+    generateLetterCombinations,
+    letters,
+    findAllRealWords
+} from '../utils/WordsGeneration'
+
+import { Logger } from 'sass'
 import { test } from '../models/EmojiTable'
 
 interface BlitzProps {}
@@ -19,19 +23,18 @@ const DailyBlitz: FC<BlitzProps> = ({}: BlitzProps) => {
     const inputRef = useRef<HTMLInputElement>(null)
 
     useEffect(() => {
-        console.log(test('when life gives you lemons you make lemonade'))
+        //console.log(test('when life gives you lemons you make lemonade'))
         if (!letterGroup || !validWords) {
             const LG: string = getLGfromDB().toUpperCase()
             setValidWords(getVWfromDB())
             if (checkLegal(LG)) {
                 setLetterGroup(Array.from(LG))
-                console.log(LG)
             } else throw new Error('get rekt, letter group invalid')
         }
     }, [])
 
     useEffect(() => {
-        console.log(validWords)
+        //console.log(validWords)
     }, [score, letterGroup, validWords])
 
     useEffect(() => {
@@ -46,21 +49,17 @@ const DailyBlitz: FC<BlitzProps> = ({}: BlitzProps) => {
 
     const getVWfromDB = () => {
         // request the array from DB
-        // then return it, in the meantime:
-        return [
-            { word: 'mag', isUsed: false },
-            { word: 'imagine', isUsed: false },
-            { word: 'mine', isUsed: false },
-            { word: 'in', isUsed: false },
-            { word: 'gain', isUsed: false },
-            { word: 'image', isUsed: false },
-            { word: 'mag', isUsed: false },
-            { word: 'man', isUsed: false },
-            { word: 'game', isUsed: false },
-            { word: 'main', isUsed: false },
-            { word: 'mage', isUsed: false },
-            { word: 'age', isUsed: false }
-        ]
+        // make a Word[] from it and return it
+        // in the meantime:
+
+        const comb: string[] = generateLetterCombinations(letters)
+        const allWords: string[] = findAllRealWords(comb)
+        console.log(allWords)
+        const res: Word[] = []
+        for (const w of allWords) {
+            res.push({ word: w, isUsed: false })
+        }
+        return res
     }
 
     const checkLegal = (LG: string) => {
@@ -71,7 +70,7 @@ const DailyBlitz: FC<BlitzProps> = ({}: BlitzProps) => {
     }
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (!gameOver) setWord(event.target.value.toLowerCase())
+        if (!gameOver) setWord(event.target.value.toUpperCase())
     }
 
     const handleKeyPress = (e: KeyboardEvent) => {
@@ -109,8 +108,14 @@ const DailyBlitz: FC<BlitzProps> = ({}: BlitzProps) => {
 
     const onTimeOver = () => {
         setGameOver(true)
-        //navigate to end result component/s
     }
+
+    useEffect(() => {
+        // if (gameOver) {
+        //   alert('RIP')
+        //navigate to end result component/s
+        // }
+    }, [gameOver])
 
     return (
         <div>

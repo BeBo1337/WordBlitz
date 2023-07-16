@@ -1,9 +1,5 @@
-import { WordPack } from '../models/WordPack.model'
+import { WordsData } from '../models/WordData.model'
 import data from '../models/WordPacks.json'
-
-interface WordsData {
-    [key: string]: string[]
-}
 
 export const getNumberInRange = (start: number, end: number): number => {
     return Math.floor(Math.random() * (end - start + 1)) + start
@@ -34,5 +30,5 @@ export function getNextWord(difficulty: number): string {
     const randomIndex: number = getNumberInRange(0, words.length - 1)
     const word: string = words[randomIndex]
     words.splice(randomIndex, 1)
-    return word.toUpperCase()
+    return word
 }

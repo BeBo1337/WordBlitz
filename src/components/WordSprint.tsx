@@ -6,11 +6,15 @@ import { Difficulties } from '../utils/Constants'
 interface WordSprintProps {}
 
 function WordSprint({}: WordSprintProps) {
-    const [gameOver, setGameOver] = useState(false)
-    const [time, setTime] = useState(30)
-    const [score, setScore] = useState(0)
-    const [objectiveWord, setObjectiveWord] = useState('')
-    const [word, setWord] = useState('')
+    const [gameOver, setGameOver] = useState<boolean>(false)
+    const [time, setTime] = useState<number>(30)
+    const [score, setScore] = useState<number>(0)
+    const [objectiveWord, setObjectiveWord] = useState<string>('')
+    const [word, setWord] = useState<string>('')
+
+    const [wordsTyped, setWordsTyped] = useState(0)
+    const [startTime, setStartTime] = useState<number>(Date.now())
+    const [wpm, setWpm] = useState(0)
     const inputRef = useRef<HTMLInputElement>(null)
 
     useEffect(() => {
@@ -25,6 +29,7 @@ function WordSprint({}: WordSprintProps) {
     }, [score])
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        calculateWPM()
         if (event.target.value) {
             var len = event.target.value.length
             if (
@@ -57,6 +62,7 @@ function WordSprint({}: WordSprintProps) {
     const handleEnterPress = () => {
         if (objectiveWord === word && !gameOver) {
             setScore(score + word.length)
+            setWordsTyped(wordsTyped + 1)
         } else {
             setGameOver(true)
         }
@@ -90,9 +96,21 @@ function WordSprint({}: WordSprintProps) {
         })
     }
 
+    const calculateWPM = () => {
+        if (startTime !== null && wordsTyped > 0 && !gameOver) {
+            const elapsedTime = (Date.now() - startTime) / 1000 // Time in seconds
+            const calc = (wordsTyped / elapsedTime) * 60 // Words per minute
+            setWpm(Math.round(calc))
+        }
+    }
+
     return (
         <div>
-            <TimerCountdown onTimeOver={onTimeOver} time={time} />
+            <TimerCountdown
+                onTimeOver={onTimeOver}
+                time={time}
+                calcWpm={calculateWPM}
+            />
             <h1>{renderWord()}</h1>
             <input
                 ref={inputRef}
@@ -102,6 +120,7 @@ function WordSprint({}: WordSprintProps) {
                 onChange={handleInputChange}
             />
             <h2>score: {score}</h2>
+            <h2>WPM: {wpm}</h2>
         </div>
     )
 }
